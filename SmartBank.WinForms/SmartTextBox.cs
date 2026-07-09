@@ -1,12 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace SmartBank.WinForms
 {
+    public enum InputValidationMode
+    {
+        Any,
+        DigitsOnly,
+        DecimalNumber,
+        LettersOnly,
+        LettersAndSpaces,
+    }
+
     public class SmartTextBox : TextBox
     {
+
+        private readonly Dictionary<InputValidationMode, Func<char, bool>> _validationRules;
+
         private const char EmptyChar = '\0';
 
         private string _hintText = "Enter anything";
@@ -78,7 +91,7 @@ namespace SmartBank.WinForms
             }
         }
 
-        // Hide the inherited PasswordChar to avoid bypassing SmartPasswordChar logic.
+        // Hide the inherited PasswordChar to avoid bypassing SmartPasswordChar logic
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -104,9 +117,23 @@ namespace SmartBank.WinForms
             }
         }
 
+        [Category("Smart TextBox")]
+        [Description("Determines what kind of input is allowed")]
+        [DefaultValue(InputValidationMode.Any)]
+        public InputValidationMode ValidationMode { get; set; } = InputValidationMode.Any;
+
         public SmartTextBox()
         {
             BorderStyle = BorderStyle.Fixed3D;
+
+            _validationRules = new Dictionary<InputValidationMode, Func<char, bool>>
+            {
+                { InputValidationMode.Any, keyChar => true },
+                { InputValidationMode.DigitsOnly, char.IsDigit },
+                { InputValidationMode.DecimalNumber,keyChar => char.IsDigit(keyChar) || CanAddDecimalPoint(keyChar) },
+                { InputValidationMode.LettersOnly,keyChar => char.IsLetter(keyChar)},
+                { InputValidationMode.LettersAndSpaces,keyChar => char.IsLetter(keyChar) || keyChar == ' '}
+            };
         }
 
         protected override void OnCreateControl()
@@ -128,6 +155,17 @@ namespace SmartBank.WinForms
             base.OnLeave(e);
 
             TryShowHint();
+        }
+
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            if (!IsKeyAllowed(e.KeyChar))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            base.OnKeyPress(e);
         }
 
         private void TryShowHint()
@@ -157,7 +195,7 @@ namespace SmartBank.WinForms
         {
             _isHintVisible = false;
 
-            base.Text = value?.Trim() ?? string.Empty;
+            base.Text = value ?? string.Empty;
             base.ForeColor = _textColor;
             ApplyPasswordMasking();
         }
@@ -167,5 +205,20 @@ namespace SmartBank.WinForms
             base.PasswordChar = _isHintVisible ? EmptyChar : _realPasswordChar;
         }
 
+        private bool IsKeyAllowed(char keyChar)
+        {
+            if (char.IsControl(keyChar)) return true;
+
+            if (_validationRules.TryGetValue(this.ValidationMode, out Func<char, bool> rule))
+                return rule(keyChar);
+            
+            return true;
+        }
+
+        // Allows only one decimal point and prevents starting the value with a dot
+        private bool CanAddDecimalPoint(char keyChar)
+        {
+            return keyChar == '.' && !Text.Contains(".") && Text.Length > 0;
+        }
     }
 }
