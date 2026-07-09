@@ -7,9 +7,11 @@ namespace SmartBank.WinForms
 {
     public class SmartTextBox : TextBox
     {
+        private const char EmptyChar = '\0';
 
         private string _hintText = "Enter anything";
         private bool _isHintVisible = false;
+        private char _realPasswordChar = EmptyChar;
 
         private readonly Color _textColor = SystemColors.WindowText;
         private readonly Color _hintColor = SystemColors.GrayText;
@@ -59,6 +61,40 @@ namespace SmartBank.WinForms
             }
         }
 
+        [Category("Smart TextBox")]
+        [Description("Password character used for the actual user text. The hint text is never masked.")]
+        [DefaultValue('\0')]
+        public char SmartPasswordChar
+        {
+            get
+            {
+                return _realPasswordChar;
+            }
+            set
+            {
+                _realPasswordChar = value;
+
+                ApplyPasswordMasking();
+            }
+        }
+
+        // Hide the inherited PasswordChar to avoid bypassing SmartPasswordChar logic.
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public new char PasswordChar
+        {
+            get
+            {
+                return SmartPasswordChar;
+            }
+            set
+            {
+                SmartPasswordChar = value;
+            }
+        }
+
+
         [Browsable(false)]
         public bool IsHintVisible
         {
@@ -106,6 +142,7 @@ namespace SmartBank.WinForms
 
             base.Text = _hintText;
             base.ForeColor = _hintColor;
+            ApplyPasswordMasking();
         }
 
         private void HideHint()
@@ -122,6 +159,12 @@ namespace SmartBank.WinForms
 
             base.Text = value?.Trim() ?? string.Empty;
             base.ForeColor = _textColor;
+            ApplyPasswordMasking();
+        }
+
+        private void ApplyPasswordMasking()
+        {
+            base.PasswordChar = _isHintVisible ? EmptyChar : _realPasswordChar;
         }
 
     }
