@@ -1,25 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace SmartBank.WinForms
+namespace SmartBank.WinForms.Controls
 {
-    public enum InputValidationMode
-    {
-        Any,
-        DigitsOnly,
-        DecimalNumber,
-        LettersOnly,
-        LettersAndSpaces,
-    }
-
     public class SmartTextBox : TextBox
     {
-
-        private readonly Dictionary<InputValidationMode, Func<char, bool>> _validationRules;
-
         private const char EmptyChar = '\0';
 
         private string _hintText = "Enter anything";
@@ -125,15 +112,6 @@ namespace SmartBank.WinForms
         public SmartTextBox()
         {
             BorderStyle = BorderStyle.Fixed3D;
-
-            _validationRules = new Dictionary<InputValidationMode, Func<char, bool>>
-            {
-                { InputValidationMode.Any, keyChar => true },
-                { InputValidationMode.DigitsOnly, char.IsDigit },
-                { InputValidationMode.DecimalNumber,keyChar => char.IsDigit(keyChar) || CanAddDecimalPoint(keyChar) },
-                { InputValidationMode.LettersOnly,keyChar => char.IsLetter(keyChar)},
-                { InputValidationMode.LettersAndSpaces,keyChar => char.IsLetter(keyChar) || keyChar == ' '}
-            };
         }
 
         protected override void OnCreateControl()
@@ -209,16 +187,8 @@ namespace SmartBank.WinForms
         {
             if (char.IsControl(keyChar)) return true;
 
-            if (_validationRules.TryGetValue(this.ValidationMode, out Func<char, bool> rule))
-                return rule(keyChar);
-            
-            return true;
+            return InputValidationPolicyProvider.GetPolicy(ValidationMode).CanAcceptCharacter(Text, keyChar);
         }
 
-        // Allows only one decimal point and prevents starting the value with a dot
-        private bool CanAddDecimalPoint(char keyChar)
-        {
-            return keyChar == '.' && !Text.Contains(".") && Text.Length > 0;
-        }
     }
 }
