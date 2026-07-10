@@ -127,11 +127,26 @@ namespace SmartBank.WinForms.Controls
             }
         }
 
+        [Category("Smart TextBox")]
+        [Description("Indicates whether a value is required")]
+        [DefaultValue(false)]
+        public bool IsRequired { get; set; }
+
         public SmartTextBox()
         {
             BorderStyle = BorderStyle.Fixed3D;
 
             _policy = InputValidationPolicyProvider.GetPolicy(_validationMode);
+        }
+
+        public bool IsValid()
+        {
+            string text = Text;
+
+            if (string.IsNullOrWhiteSpace(text))
+                return !IsRequired;
+
+            return _policy.IsTextValid(text);
         }
 
         protected override void OnCreateControl()
@@ -209,6 +224,5 @@ namespace SmartBank.WinForms.Controls
 
             return _policy.CanAcceptCharacter(Text, keyChar);
         }
-
     }
 }
