@@ -12,9 +12,12 @@ namespace SmartBank.WinForms.Controls
         private string _hintText = "Enter anything";
         private bool _isHintVisible = false;
         private char _realPasswordChar = EmptyChar;
+        private InputValidationMode _validationMode = InputValidationMode.Any;
+        private InputValidationPolicy _policy;
 
         private readonly Color _textColor = SystemColors.WindowText;
         private readonly Color _hintColor = SystemColors.GrayText;
+
 
         [Category("Smart TextBox")]
         [Description("Text shown when the TextBox is empty.")]
@@ -107,11 +110,28 @@ namespace SmartBank.WinForms.Controls
         [Category("Smart TextBox")]
         [Description("Determines what kind of input is allowed")]
         [DefaultValue(InputValidationMode.Any)]
-        public InputValidationMode ValidationMode { get; set; } = InputValidationMode.Any;
+        public InputValidationMode ValidationMode
+        {
+            get
+            {
+                return _validationMode;
+            }
+            set
+            {
+                if (_validationMode == value)
+                    return;
+
+                _validationMode = value;
+                _policy = InputValidationPolicyProvider.GetPolicy(value);
+
+            }
+        }
 
         public SmartTextBox()
         {
             BorderStyle = BorderStyle.Fixed3D;
+
+            _policy = InputValidationPolicyProvider.GetPolicy(_validationMode);
         }
 
         protected override void OnCreateControl()
@@ -187,7 +207,7 @@ namespace SmartBank.WinForms.Controls
         {
             if (char.IsControl(keyChar)) return true;
 
-            return InputValidationPolicyProvider.GetPolicy(ValidationMode).CanAcceptCharacter(Text, keyChar);
+            return _policy.CanAcceptCharacter(Text, keyChar);
         }
 
     }
