@@ -1,3 +1,3 @@
 ## Database Schema
 
-![SmartBank Database Schema](docs/images/smartbank-schema.png)
+![SmartBank Database Schema](docs/images/BankSystemSchema.png)
