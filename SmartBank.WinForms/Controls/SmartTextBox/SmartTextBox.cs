@@ -135,6 +135,7 @@ namespace SmartBank.WinForms.Controls
         public SmartTextBox()
         {
             BorderStyle = BorderStyle.Fixed3D;
+            Font = new Font(Font.FontFamily, 12F, Font.Style, Font.Unit);
 
             _policy = InputValidationPolicyProvider.GetPolicy(_validationMode);
         }
