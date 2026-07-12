@@ -49,10 +49,10 @@
     <Compile Include="Controls\CirclePictureBox\CirclePictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="frmAddEditPerson.cs">
+    <Compile Include="People\frmAddEditPerson.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAddEditPerson.Designer.cs">
+    <Compile Include="People\frmAddEditPerson.Designer.cs">
       <DependentUpon>frmAddEditPerson.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\SmartTextBox\InputValidationMode.cs" />
@@ -63,7 +63,7 @@
     <Compile Include="Controls\SmartTextBox\SmartTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <EmbeddedResource Include="frmAddEditPerson.resx">
+    <EmbeddedResource Include="People\frmAddEditPerson.resx">
       <DependentUpon>frmAddEditPerson.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
