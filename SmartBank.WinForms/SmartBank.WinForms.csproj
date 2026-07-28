@@ -128,5 +128,15 @@
   <ItemGroup>
     <None Include="Resources\icons8-upload-32 %282%29.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartBank.Business\SmartBank.Business.csproj">
+      <Project>{ec3502b5-41ac-4bba-976f-bc7430fef7af}</Project>
+      <Name>SmartBank.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartBank.Models\SmartBank.Models.csproj">
+      <Project>{b5ee0e1d-e4a8-4368-b108-1b01a27a6c5e}</Project>
+      <Name>SmartBank.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
