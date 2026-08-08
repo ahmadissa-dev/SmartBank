@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="SmartBank.Business/SmartBank.Business.csproj" Id="ec3502b5-41ac-4bba-976f-bc7430fef7af" />
   <Project Path="SmartBank.DataAccess/SmartBank.DataAccess.csproj" Id="8ee1c153-f302-4e4d-a7b9-2a2a869b06cd" />
+  <Project Path="SmartBank.Infrastructure/SmartBank.Infrastructure.csproj" Id="23c935a1-0989-4226-a599-63aff4638b84" />
   <Project Path="SmartBank.Models/SmartBank.Models.csproj" Id="b5ee0e1d-e4a8-4368-b108-1b01a27a6c5e" />
   <Project Path="SmartBank.WinForms/SmartBank.WinForms.csproj" Id="6afeeb6c-01aa-4225-bcf3-b5011b71b992" />
 </Solution>
