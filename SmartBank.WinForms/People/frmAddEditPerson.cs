@@ -1,4 +1,5 @@
 ﻿using SmartBank.Business;
+using SmartBank.Infrastructure.Logging;
 using SmartBank.Models;
 using System;
 using System.Collections.Generic;
@@ -17,26 +18,39 @@ namespace SmartBank.WinForms
 
         private async void frmAddEditPerson_Load(object sender, EventArgs e)
         {
-            bool isCountryListLoaded = false;
+            bool areCountriesLoaded = await TryLoadCountriesAsync();
 
+            SetCountrySelectionAvailability(areCountriesLoaded);
+        }
+
+        private async Task<bool> TryLoadCountriesAsync()
+        {
             try
             {
-                await LoadCountriesAsync();
-                isCountryListLoaded = true;
+                List<Country> countries = await _countryService.GetAllCountriesAsync();
+
+                cbCountries.DataSource = countries;
+                cbCountries.DisplayMember = nameof(Country.CountryName);
+                cbCountries.ValueMember = nameof(Country.CountryID);
+                cbCountries.SelectedIndex = -1;
+
+                return true;
             }
-            catch (InvalidOperationException ioex)
+            catch (InvalidOperationException ex)
             {
+                EventViewerLogger.LogWarning(ex, "No active countries were found while loading frmAddEditPerson");
 
                 MessageBox.Show(
-                    "No active countries were found. You cannot add a person until countries are available.",
+                    "No active countries were found. You cannot add a person until countries are available",
                     "Missing Data",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                 );
-
             }
             catch (Exception ex)
             {
+                EventViewerLogger.LogError(ex, "Failed to load countries in frmAddEditPerson_Load");
+
                 MessageBox.Show(
                     "Failed to load countries",
                     "Error",
@@ -44,27 +58,18 @@ namespace SmartBank.WinForms
                     MessageBoxIcon.Error
                 );
             }
-            finally
+
+            return false;
+        }
+
+        private void SetCountrySelectionAvailability(bool isAvailable)
+        {
+            cbCountries.Enabled = isAvailable;
+
+            if (!isAvailable)
             {
-                if (!isCountryListLoaded)
-                    DisableSaveBecauseCountriesAreUnavailable();
+                cbCountries.DataSource = null;
             }
-        }
-
-        private void DisableSaveBecauseCountriesAreUnavailable()
-        {
-            cbCountries.DataSource = null;
-            cbCountries.Enabled = false;
-            btnSave.Enabled = false;
-        }
-
-        private async Task LoadCountriesAsync()
-        {
-            List<Country> countries = await _countryService.GetAllCountriesAsync();
-
-            cbCountries.DataSource = countries;
-            cbCountries.DisplayMember = nameof(Country.CountryName);
-            cbCountries.ValueMember = nameof(Country.CountryID);
         }
     }
 }
