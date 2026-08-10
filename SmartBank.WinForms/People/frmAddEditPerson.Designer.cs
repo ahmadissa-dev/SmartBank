@@ -36,7 +36,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.pnlProfilePhoto = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.circlePictureBox1 = new SmartBank.WinForms.Controls.CirclePictureBox();
+            this.pbPersonImage = new SmartBank.WinForms.Controls.CirclePictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.btnChangePhoto = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
@@ -94,11 +94,12 @@
             this.btnReset = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.circlePictureBox2)).BeginInit();
             this.pnlProfilePhoto.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.circlePictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPersonImage)).BeginInit();
             this.pnlPersonInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlContactInfo.SuspendLayout();
@@ -170,7 +171,7 @@
             this.pnlProfilePhoto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
             this.pnlProfilePhoto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlProfilePhoto.Controls.Add(this.pictureBox2);
-            this.pnlProfilePhoto.Controls.Add(this.circlePictureBox1);
+            this.pnlProfilePhoto.Controls.Add(this.pbPersonImage);
             this.pnlProfilePhoto.Controls.Add(this.label5);
             this.pnlProfilePhoto.Controls.Add(this.btnChangePhoto);
             this.pnlProfilePhoto.Controls.Add(this.label22);
@@ -189,27 +190,27 @@
             this.pictureBox2.TabIndex = 38;
             this.pictureBox2.TabStop = false;
             // 
-            // circlePictureBox1
+            // pbPersonImage
             // 
-            this.circlePictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
-            this.circlePictureBox1.Image = global::SmartBank.WinForms.Properties.Resources.icons8_grayPerson_100;
-            this.circlePictureBox1.Location = new System.Drawing.Point(93, 61);
-            this.circlePictureBox1.Name = "circlePictureBox1";
-            this.circlePictureBox1.Size = new System.Drawing.Size(178, 178);
-            this.circlePictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.circlePictureBox1.TabIndex = 41;
-            this.circlePictureBox1.TabStop = false;
+            this.pbPersonImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pbPersonImage.Image = global::SmartBank.WinForms.Properties.Resources.icons8_grayPerson_100;
+            this.pbPersonImage.Location = new System.Drawing.Point(93, 61);
+            this.pbPersonImage.Name = "pbPersonImage";
+            this.pbPersonImage.Size = new System.Drawing.Size(178, 178);
+            this.pbPersonImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbPersonImage.TabIndex = 41;
+            this.pbPersonImage.TabStop = false;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.DimGray;
-            this.label5.Location = new System.Drawing.Point(97, 295);
+            this.label5.Location = new System.Drawing.Point(69, 294);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(174, 20);
+            this.label5.Size = new System.Drawing.Size(232, 20);
             this.label5.TabIndex = 40;
-            this.label5.Text = "JPG, PNG up to 3 MB";
+            this.label5.Text = "PNG, JPG, JPEG  up to 5 MB";
             // 
             // btnChangePhoto
             // 
@@ -218,6 +219,7 @@
             this.btnChangePhoto.FlatAppearance.BorderSize = 5;
             this.btnChangePhoto.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnChangePhoto.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(82)))), ((int)(((byte)(75)))));
+            this.btnChangePhoto.Image = global::SmartBank.WinForms.Properties.Resources.icons8_download_32;
             this.btnChangePhoto.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnChangePhoto.Location = new System.Drawing.Point(33, 245);
             this.btnChangePhoto.Name = "btnChangePhoto";
@@ -226,6 +228,7 @@
             this.btnChangePhoto.Text = "Change Photo";
             this.btnChangePhoto.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnChangePhoto.UseVisualStyleBackColor = true;
+            this.btnChangePhoto.Click += new System.EventHandler(this.btnChangePhoto_Click);
             // 
             // label22
             // 
@@ -928,6 +931,11 @@
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = false;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Filter = "Image Files|*.png;*.jpg;*.jpeg";
+            this.openFileDialog1.Title = "Select Profile Photo";
+            // 
             // frmAddEditPerson
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -957,7 +965,7 @@
             this.pnlProfilePhoto.ResumeLayout(false);
             this.pnlProfilePhoto.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.circlePictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPersonImage)).EndInit();
             this.pnlPersonInfo.ResumeLayout(false);
             this.pnlPersonInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -1029,7 +1037,7 @@
         private System.Windows.Forms.Label lblCreatedAt;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Panel panel2;
-        private Controls.CirclePictureBox circlePictureBox1;
+        private Controls.CirclePictureBox pbPersonImage;
         private Controls.CirclePictureBox circlePictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
@@ -1038,6 +1046,7 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
