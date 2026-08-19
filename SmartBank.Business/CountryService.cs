@@ -10,9 +10,9 @@ namespace SmartBank.Business
     {
         private readonly CountryRepository _countryRepository = new CountryRepository();
 
-        public async Task<List<Country>> GetAllCountriesAsync()
+        public async Task<List<Country>> GetActiveCountriesAsync()
         {
-            List<Country> countries = await _countryRepository.GetAllCountriesAsync();
+            List<Country> countries = await _countryRepository.GetActiveCountriesAsync();
 
             if(countries.Count == 0)
             {

@@ -39,7 +39,7 @@ namespace SmartBank.WinForms
         {
             try
             {
-                List<Country> countries = await _countryService.GetAllCountriesAsync();
+                List<Country> countries = await _countryService.GetActiveCountriesAsync();
 
                 cbCountries.DataSource = countries;
                 cbCountries.DisplayMember = nameof(Country.CountryName);
