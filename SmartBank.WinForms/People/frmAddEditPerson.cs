@@ -30,9 +30,19 @@ namespace SmartBank.WinForms
         {
             openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
+            ConfigureDateOfBirthPicker();
+
             bool areCountriesLoaded = await TryLoadCountriesAsync();
 
             SetCountrySelectionAvailability(areCountriesLoaded);
+        }
+
+        private void ConfigureDateOfBirthPicker()
+        {
+            dtpDateOfBirth.MaxDate = DateTime.Today.AddYears(-18);
+            dtpDateOfBirth.MinDate = DateTime.Today.AddYears(-120);
+
+            dtpDateOfBirth.Value = dtpDateOfBirth.MaxDate;
         }
 
         private async Task<bool> TryLoadCountriesAsync()
