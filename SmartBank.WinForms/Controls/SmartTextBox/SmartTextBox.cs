@@ -18,7 +18,6 @@ namespace SmartBank.WinForms.Controls
         private readonly Color _textColor = SystemColors.WindowText;
         private readonly Color _hintColor = SystemColors.GrayText;
 
-
         [Category("Smart TextBox")]
         [Description("Text shown when the TextBox is empty.")]
         [DefaultValue("Enter anything")]
@@ -34,7 +33,7 @@ namespace SmartBank.WinForms.Controls
 
                 if (IsHintVisible)
                 {
-                    SetActualText();
+                    ExitHintMode();
                 }
 
                 TryShowHint();
@@ -43,7 +42,7 @@ namespace SmartBank.WinForms.Controls
 
         /// <summary>
         /// Gets or sets the actual user text.
-        /// When the hint is visible, this property returns an empty string
+        /// When the hint is visible, this property returns an empty string.
         /// </summary>
         public override string Text
         {
@@ -53,14 +52,13 @@ namespace SmartBank.WinForms.Controls
             }
             set
             {
+                SetActualText(value);
+
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    SetActualText();
                     TryShowHint();
                     return;
                 }
-
-                SetActualText(value);
             }
         }
 
@@ -81,7 +79,7 @@ namespace SmartBank.WinForms.Controls
             }
         }
 
-        // Hide the inherited PasswordChar to avoid bypassing SmartPasswordChar logic
+        // Hide the inherited PasswordChar to avoid bypassing SmartPasswordChar logic.
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -97,7 +95,6 @@ namespace SmartBank.WinForms.Controls
             }
         }
 
-
         [Browsable(false)]
         public bool IsHintVisible
         {
@@ -108,7 +105,7 @@ namespace SmartBank.WinForms.Controls
         }
 
         [Category("Smart TextBox")]
-        [Description("Determines what kind of input is allowed")]
+        [Description("Determines what kind of input is allowed.")]
         [DefaultValue(InputValidationMode.Any)]
         public InputValidationMode ValidationMode
         {
@@ -123,12 +120,11 @@ namespace SmartBank.WinForms.Controls
 
                 _validationMode = value;
                 _policy = InputValidationPolicyProvider.GetPolicy(value);
-
             }
         }
 
         [Category("Smart TextBox")]
-        [Description("Indicates whether a value is required")]
+        [Description("Indicates whether a value is required.")]
         [DefaultValue(false)]
         public bool IsRequired { get; set; }
 
@@ -194,6 +190,7 @@ namespace SmartBank.WinForms.Controls
 
             base.Text = _hintText;
             base.ForeColor = _hintColor;
+
             ApplyPasswordMasking();
         }
 
@@ -202,15 +199,23 @@ namespace SmartBank.WinForms.Controls
             if (!_isHintVisible)
                 return;
 
-            SetActualText();
+            ExitHintMode();
         }
 
         private void SetActualText(string value = "")
         {
-            _isHintVisible = false;
+            ExitHintMode();
 
             base.Text = value ?? string.Empty;
+        }
+
+        private void ExitHintMode()
+        {
+            _isHintVisible = false;
+
+            base.Text = string.Empty;
             base.ForeColor = _textColor;
+
             ApplyPasswordMasking();
         }
 
@@ -221,7 +226,8 @@ namespace SmartBank.WinForms.Controls
 
         private bool IsKeyAllowed(char keyChar)
         {
-            if (char.IsControl(keyChar)) return true;
+            if (char.IsControl(keyChar))
+                return true;
 
             return _policy.CanAcceptCharacter(Text, keyChar);
         }
