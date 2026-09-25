@@ -14,9 +14,12 @@ namespace SmartBank.WinForms
     public partial class frmAddEditPerson : Form
     {
         private readonly CountryService _countryService = new CountryService();
+        private readonly PersonPhoneService _personPhoneService = new PersonPhoneService();
         private string _selectedProfilePhotoPath = string.Empty;
+        private Country _selectedCountry;
+        private int _phoneValidationVersion;
 
-        private const int MaxProfilePhotoSizeInBytes  = 1024 * 1024 * 5; // 5MB
+        private const int MaxProfilePhotoSizeInBytes = 1024 * 1024 * 5; // 5MB
         private const int MinProfilePhotoWidth = 200;
         private const int MinProfilePhotoHeight = 200;
         private static readonly string[] AllowedProfilePhotoExtensions = { ".png", ".jpg", ".jpeg" };
@@ -137,7 +140,7 @@ namespace SmartBank.WinForms
                 return false;
             }
 
-            if (fileInfo.Length > MaxProfilePhotoSizeInBytes )
+            if (fileInfo.Length > MaxProfilePhotoSizeInBytes)
             {
                 MessageBox.Show(
                     "Image size must not exceed 5 MB.",
@@ -176,6 +179,124 @@ namespace SmartBank.WinForms
                 );
                 return false;
             }
+
+            return true;
+        }
+
+        private void cbCountries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _selectedCountry = cbCountries.SelectedItem as Country;
+
+            if (_selectedCountry == null)
+            {
+                stbCallingCode.Clear();
+                return;
+            }
+
+            stbCallingCode.Text = $"+{_selectedCountry.CallingCode}";
+        }
+
+        private async void cbCountries_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(stbPhoneNumber.Text))
+                return;
+
+            await CanUsePhoneNumberAsync();
+        }
+
+        private void stbPhoneNumber_Enter(object sender, EventArgs e)
+        {
+            if (_selectedCountry == null)
+            {
+                MessageBox.Show("Please select a country before entering a phone number",
+                                "Country Required", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+                stbPhoneNumber.Clear();
+                cbCountries.Focus();
+            }
+        }
+
+        private async void stbPhoneNumber_Leave(object sender, EventArgs e)
+        {
+            await CanUsePhoneNumberAsync();
+        }
+
+        private async Task<bool> CanUsePhoneNumberAsync()
+        {
+            int version = ++_phoneValidationVersion;
+
+            string phoneNumber = stbPhoneNumber.Text.Trim();
+
+            if (string.IsNullOrEmpty(phoneNumber))
+            {
+                errorProvider1.SetError(
+                    stbPhoneNumber,
+                    "Phone number is required."
+                    );
+                return false;
+            }
+
+            if (!(cbCountries.SelectedValue is int))
+            {
+                errorProvider1.SetError(
+                    stbPhoneNumber,
+                    "Please select a country."
+                    );
+                return false;
+            }
+
+            if (!_personPhoneService.IsPhoneNumberValid(phoneNumber))
+            {
+                errorProvider1.SetError(
+                    stbPhoneNumber,
+                    "Phone number is not valid."
+                    );
+                return false;
+            }
+
+            int countryID = (int)cbCountries.SelectedValue;
+
+            try
+            {
+                bool exists = await _personPhoneService
+                                .PhoneNumberExistsAsync(phoneNumber, countryID);
+
+                if (version != _phoneValidationVersion
+                    || stbPhoneNumber.Text.Trim() != phoneNumber)
+                    return false;
+
+                if (exists)
+                {
+                    errorProvider1.SetError(
+                        stbPhoneNumber,
+                        "This number is already taken; please choose another number."
+                    );
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                EventViewerLogger.LogError(
+                ex,
+                "Failed to check phone number uniqueness during phone number validation."
+                );
+
+                if (version != _phoneValidationVersion
+                    || stbPhoneNumber.Text.Trim() != phoneNumber)
+                    return false;
+
+                errorProvider1.SetError(
+                    stbPhoneNumber,
+                    "Unable to check the phone number right now. Please try again."
+                );
+
+                return false;
+            }
+
+            errorProvider1.SetError(
+                stbPhoneNumber,
+                string.Empty
+            );
 
             return true;
         }

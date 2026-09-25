@@ -28,15 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAddEditPerson));
             this.lblTitel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.circlePictureBox2 = new SmartBank.WinForms.Controls.CirclePictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.pnlProfilePhoto = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pbPersonImage = new SmartBank.WinForms.Controls.CirclePictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.btnChangePhoto = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
@@ -48,13 +47,8 @@
             this.lblDateOfBirth = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.dtpDateOfBirth = new System.Windows.Forms.DateTimePicker();
-            this.stbNationalNumber = new SmartBank.WinForms.Controls.SmartTextBox();
             this.lblisRequiredNationalNumber = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.stbLastName = new SmartBank.WinForms.Controls.SmartTextBox();
-            this.stbThirdName = new SmartBank.WinForms.Controls.SmartTextBox();
-            this.stbSecondName = new SmartBank.WinForms.Controls.SmartTextBox();
-            this.stbFirstName = new SmartBank.WinForms.Controls.SmartTextBox();
             this.lblisRequiredSecondName = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lblisRequiredFirstName = new System.Windows.Forms.Label();
@@ -67,16 +61,13 @@
             this.pnlContactInfo = new System.Windows.Forms.Panel();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.lblisRequiredAddress = new System.Windows.Forms.Label();
-            this.stbAddress = new SmartBank.WinForms.Controls.SmartTextBox();
             this.label28 = new System.Windows.Forms.Label();
             this.lblisRequiredCountry = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.cbCountries = new System.Windows.Forms.ComboBox();
             this.lblisRequiredEmail = new System.Windows.Forms.Label();
-            this.stbEmail = new SmartBank.WinForms.Controls.SmartTextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.lblisRequiredPhoneNmber = new System.Windows.Forms.Label();
-            this.stbPhoneNumber = new SmartBank.WinForms.Controls.SmartTextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.pnlRecordInfo = new System.Windows.Forms.Panel();
@@ -95,17 +86,30 @@
             this.btnReset = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.stbNationalNumber = new SmartBank.WinForms.Controls.SmartTextBox();
+            this.stbLastName = new SmartBank.WinForms.Controls.SmartTextBox();
+            this.stbThirdName = new SmartBank.WinForms.Controls.SmartTextBox();
+            this.stbSecondName = new SmartBank.WinForms.Controls.SmartTextBox();
+            this.stbFirstName = new SmartBank.WinForms.Controls.SmartTextBox();
+            this.stbCallingCode = new SmartBank.WinForms.Controls.SmartTextBox();
+            this.stbAddress = new SmartBank.WinForms.Controls.SmartTextBox();
+            this.stbEmail = new SmartBank.WinForms.Controls.SmartTextBox();
+            this.stbPhoneNumber = new SmartBank.WinForms.Controls.SmartTextBox();
+            this.pbPersonImage = new SmartBank.WinForms.Controls.CirclePictureBox();
+            this.circlePictureBox2 = new SmartBank.WinForms.Controls.CirclePictureBox();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.circlePictureBox2)).BeginInit();
             this.pnlProfilePhoto.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbPersonImage)).BeginInit();
             this.pnlPersonInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlContactInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.pnlRecordInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPersonImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.circlePictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTitel
@@ -133,18 +137,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1343, 102);
             this.panel1.TabIndex = 3;
-            // 
-            // circlePictureBox2
-            // 
-            this.circlePictureBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
-            this.circlePictureBox2.CircleBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(75)))), ((int)(((byte)(82)))));
-            this.circlePictureBox2.Image = global::SmartBank.WinForms.Properties.Resources.icons8_person_100;
-            this.circlePictureBox2.Location = new System.Drawing.Point(9, 5);
-            this.circlePictureBox2.Name = "circlePictureBox2";
-            this.circlePictureBox2.Size = new System.Drawing.Size(85, 85);
-            this.circlePictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.circlePictureBox2.TabIndex = 37;
-            this.circlePictureBox2.TabStop = false;
             // 
             // panel2
             // 
@@ -189,17 +181,6 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 38;
             this.pictureBox2.TabStop = false;
-            // 
-            // pbPersonImage
-            // 
-            this.pbPersonImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
-            this.pbPersonImage.Image = global::SmartBank.WinForms.Properties.Resources.icons8_grayPerson_100;
-            this.pbPersonImage.Location = new System.Drawing.Point(93, 61);
-            this.pbPersonImage.Name = "pbPersonImage";
-            this.pbPersonImage.Size = new System.Drawing.Size(178, 178);
-            this.pbPersonImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbPersonImage.TabIndex = 41;
-            this.pbPersonImage.TabStop = false;
             // 
             // label5
             // 
@@ -358,18 +339,6 @@
             this.dtpDateOfBirth.TabIndex = 31;
             this.dtpDateOfBirth.Value = new System.DateTime(2026, 7, 10, 16, 51, 25, 0);
             // 
-            // stbNationalNumber
-            // 
-            this.stbNationalNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.stbNationalNumber.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.stbNationalNumber.HintText = "Enter national number";
-            this.stbNationalNumber.IsRequired = true;
-            this.stbNationalNumber.Location = new System.Drawing.Point(24, 196);
-            this.stbNationalNumber.Multiline = true;
-            this.stbNationalNumber.Name = "stbNationalNumber";
-            this.stbNationalNumber.Size = new System.Drawing.Size(206, 43);
-            this.stbNationalNumber.TabIndex = 30;
-            // 
             // lblisRequiredNationalNumber
             // 
             this.lblisRequiredNationalNumber.AutoSize = true;
@@ -393,58 +362,6 @@
             this.label8.Size = new System.Drawing.Size(157, 25);
             this.label8.TabIndex = 28;
             this.label8.Text = "National Number";
-            // 
-            // stbLastName
-            // 
-            this.stbLastName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.stbLastName.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.stbLastName.HintText = "Enter last name";
-            this.stbLastName.IsRequired = true;
-            this.stbLastName.Location = new System.Drawing.Point(690, 89);
-            this.stbLastName.Multiline = true;
-            this.stbLastName.Name = "stbLastName";
-            this.stbLastName.Size = new System.Drawing.Size(206, 43);
-            this.stbLastName.TabIndex = 27;
-            this.stbLastName.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.LettersOnly;
-            // 
-            // stbThirdName
-            // 
-            this.stbThirdName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.stbThirdName.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.stbThirdName.HintText = "Enter third name";
-            this.stbThirdName.IsRequired = true;
-            this.stbThirdName.Location = new System.Drawing.Point(468, 89);
-            this.stbThirdName.Multiline = true;
-            this.stbThirdName.Name = "stbThirdName";
-            this.stbThirdName.Size = new System.Drawing.Size(206, 43);
-            this.stbThirdName.TabIndex = 26;
-            this.stbThirdName.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.LettersOnly;
-            // 
-            // stbSecondName
-            // 
-            this.stbSecondName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.stbSecondName.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.stbSecondName.HintText = "Enter second name";
-            this.stbSecondName.IsRequired = true;
-            this.stbSecondName.Location = new System.Drawing.Point(246, 89);
-            this.stbSecondName.Multiline = true;
-            this.stbSecondName.Name = "stbSecondName";
-            this.stbSecondName.Size = new System.Drawing.Size(206, 43);
-            this.stbSecondName.TabIndex = 25;
-            this.stbSecondName.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.LettersOnly;
-            // 
-            // stbFirstName
-            // 
-            this.stbFirstName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.stbFirstName.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.stbFirstName.HintText = "Enter first name";
-            this.stbFirstName.IsRequired = true;
-            this.stbFirstName.Location = new System.Drawing.Point(24, 89);
-            this.stbFirstName.Multiline = true;
-            this.stbFirstName.Name = "stbFirstName";
-            this.stbFirstName.Size = new System.Drawing.Size(206, 43);
-            this.stbFirstName.TabIndex = 24;
-            this.stbFirstName.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.LettersOnly;
             // 
             // lblisRequiredSecondName
             // 
@@ -558,6 +475,7 @@
             // 
             this.pnlContactInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
             this.pnlContactInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlContactInfo.Controls.Add(this.stbCallingCode);
             this.pnlContactInfo.Controls.Add(this.pictureBox3);
             this.pnlContactInfo.Controls.Add(this.lblisRequiredAddress);
             this.pnlContactInfo.Controls.Add(this.stbAddress);
@@ -591,25 +509,14 @@
             // 
             this.lblisRequiredAddress.AutoSize = true;
             this.lblisRequiredAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblisRequiredAddress.ForeColor = System.Drawing.Color.DimGray;
+            this.lblisRequiredAddress.ForeColor = System.Drawing.Color.Red;
             this.lblisRequiredAddress.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.lblisRequiredAddress.Location = new System.Drawing.Point(157, 177);
             this.lblisRequiredAddress.Name = "lblisRequiredAddress";
-            this.lblisRequiredAddress.Size = new System.Drawing.Size(79, 20);
+            this.lblisRequiredAddress.Size = new System.Drawing.Size(15, 20);
             this.lblisRequiredAddress.TabIndex = 48;
-            this.lblisRequiredAddress.Text = "(optional)";
+            this.lblisRequiredAddress.Text = "*";
             this.lblisRequiredAddress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // stbAddress
-            // 
-            this.stbAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.stbAddress.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.stbAddress.HintText = "Enter address details";
-            this.stbAddress.Location = new System.Drawing.Point(24, 205);
-            this.stbAddress.Multiline = true;
-            this.stbAddress.Name = "stbAddress";
-            this.stbAddress.Size = new System.Drawing.Size(405, 77);
-            this.stbAddress.TabIndex = 47;
             // 
             // label28
             // 
@@ -658,6 +565,8 @@
             this.cbCountries.Name = "cbCountries";
             this.cbCountries.Size = new System.Drawing.Size(405, 37);
             this.cbCountries.TabIndex = 42;
+            this.cbCountries.SelectedIndexChanged += new System.EventHandler(this.cbCountries_SelectedIndexChanged);
+            this.cbCountries.SelectionChangeCommitted += new System.EventHandler(this.cbCountries_SelectionChangeCommitted);
             // 
             // lblisRequiredEmail
             // 
@@ -671,17 +580,6 @@
             this.lblisRequiredEmail.TabIndex = 39;
             this.lblisRequiredEmail.Text = "(optional)";
             this.lblisRequiredEmail.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // stbEmail
-            // 
-            this.stbEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.stbEmail.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.stbEmail.HintText = "Enter phone number";
-            this.stbEmail.Location = new System.Drawing.Point(499, 95);
-            this.stbEmail.Multiline = true;
-            this.stbEmail.Name = "stbEmail";
-            this.stbEmail.Size = new System.Drawing.Size(405, 43);
-            this.stbEmail.TabIndex = 41;
             // 
             // label20
             // 
@@ -706,19 +604,6 @@
             this.lblisRequiredPhoneNmber.Size = new System.Drawing.Size(20, 25);
             this.lblisRequiredPhoneNmber.TabIndex = 37;
             this.lblisRequiredPhoneNmber.Text = "*";
-            // 
-            // stbPhoneNumber
-            // 
-            this.stbPhoneNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.stbPhoneNumber.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.stbPhoneNumber.HintText = "Enter phone number";
-            this.stbPhoneNumber.IsRequired = true;
-            this.stbPhoneNumber.Location = new System.Drawing.Point(30, 95);
-            this.stbPhoneNumber.Multiline = true;
-            this.stbPhoneNumber.Name = "stbPhoneNumber";
-            this.stbPhoneNumber.Size = new System.Drawing.Size(405, 43);
-            this.stbPhoneNumber.TabIndex = 38;
-            this.stbPhoneNumber.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.DigitsOnly;
             // 
             // label17
             // 
@@ -941,6 +826,150 @@
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = false;
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
+            // stbNationalNumber
+            // 
+            this.stbNationalNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.stbNationalNumber.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.stbNationalNumber.HintText = "Enter national number";
+            this.stbNationalNumber.IsRequired = true;
+            this.stbNationalNumber.Location = new System.Drawing.Point(24, 196);
+            this.stbNationalNumber.Multiline = true;
+            this.stbNationalNumber.Name = "stbNationalNumber";
+            this.stbNationalNumber.Size = new System.Drawing.Size(206, 43);
+            this.stbNationalNumber.TabIndex = 30;
+            // 
+            // stbLastName
+            // 
+            this.stbLastName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.stbLastName.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.stbLastName.HintText = "Enter last name";
+            this.stbLastName.IsRequired = true;
+            this.stbLastName.Location = new System.Drawing.Point(690, 89);
+            this.stbLastName.Multiline = true;
+            this.stbLastName.Name = "stbLastName";
+            this.stbLastName.Size = new System.Drawing.Size(206, 43);
+            this.stbLastName.TabIndex = 27;
+            this.stbLastName.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.LettersOnly;
+            // 
+            // stbThirdName
+            // 
+            this.stbThirdName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.stbThirdName.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.stbThirdName.HintText = "Enter third name";
+            this.stbThirdName.IsRequired = true;
+            this.stbThirdName.Location = new System.Drawing.Point(468, 89);
+            this.stbThirdName.Multiline = true;
+            this.stbThirdName.Name = "stbThirdName";
+            this.stbThirdName.Size = new System.Drawing.Size(206, 43);
+            this.stbThirdName.TabIndex = 26;
+            this.stbThirdName.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.LettersOnly;
+            // 
+            // stbSecondName
+            // 
+            this.stbSecondName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.stbSecondName.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.stbSecondName.HintText = "Enter second name";
+            this.stbSecondName.IsRequired = true;
+            this.stbSecondName.Location = new System.Drawing.Point(246, 89);
+            this.stbSecondName.Multiline = true;
+            this.stbSecondName.Name = "stbSecondName";
+            this.stbSecondName.Size = new System.Drawing.Size(206, 43);
+            this.stbSecondName.TabIndex = 25;
+            this.stbSecondName.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.LettersOnly;
+            // 
+            // stbFirstName
+            // 
+            this.stbFirstName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.stbFirstName.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.stbFirstName.HintText = "Enter first name";
+            this.stbFirstName.IsRequired = true;
+            this.stbFirstName.Location = new System.Drawing.Point(24, 89);
+            this.stbFirstName.Multiline = true;
+            this.stbFirstName.Name = "stbFirstName";
+            this.stbFirstName.Size = new System.Drawing.Size(206, 43);
+            this.stbFirstName.TabIndex = 24;
+            this.stbFirstName.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.LettersOnly;
+            // 
+            // stbCallingCode
+            // 
+            this.stbCallingCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.stbCallingCode.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.stbCallingCode.HintText = "";
+            this.stbCallingCode.IsRequired = true;
+            this.stbCallingCode.Location = new System.Drawing.Point(26, 95);
+            this.stbCallingCode.Multiline = true;
+            this.stbCallingCode.Name = "stbCallingCode";
+            this.stbCallingCode.ReadOnly = true;
+            this.stbCallingCode.Size = new System.Drawing.Size(98, 43);
+            this.stbCallingCode.TabIndex = 49;
+            this.stbCallingCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.stbCallingCode.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.DigitsOnly;
+            // 
+            // stbAddress
+            // 
+            this.stbAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.stbAddress.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.stbAddress.HintText = "Enter address details";
+            this.stbAddress.IsRequired = true;
+            this.stbAddress.Location = new System.Drawing.Point(24, 205);
+            this.stbAddress.Multiline = true;
+            this.stbAddress.Name = "stbAddress";
+            this.stbAddress.Size = new System.Drawing.Size(405, 77);
+            this.stbAddress.TabIndex = 47;
+            // 
+            // stbEmail
+            // 
+            this.stbEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.stbEmail.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.stbEmail.HintText = "Enter Email";
+            this.stbEmail.Location = new System.Drawing.Point(499, 95);
+            this.stbEmail.Multiline = true;
+            this.stbEmail.Name = "stbEmail";
+            this.stbEmail.Size = new System.Drawing.Size(405, 43);
+            this.stbEmail.TabIndex = 41;
+            // 
+            // stbPhoneNumber
+            // 
+            this.stbPhoneNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.stbPhoneNumber.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.stbPhoneNumber.HintText = "Enter phone number";
+            this.stbPhoneNumber.IsRequired = true;
+            this.stbPhoneNumber.Location = new System.Drawing.Point(130, 95);
+            this.stbPhoneNumber.Multiline = true;
+            this.stbPhoneNumber.Name = "stbPhoneNumber";
+            this.stbPhoneNumber.Size = new System.Drawing.Size(299, 43);
+            this.stbPhoneNumber.TabIndex = 38;
+            this.stbPhoneNumber.ValidationMode = SmartBank.WinForms.Controls.InputValidationMode.DigitsOnly;
+            this.stbPhoneNumber.Enter += new System.EventHandler(this.stbPhoneNumber_Enter);
+            this.stbPhoneNumber.Leave += new System.EventHandler(this.stbPhoneNumber_Leave);
+            // 
+            // pbPersonImage
+            // 
+            this.pbPersonImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pbPersonImage.Image = global::SmartBank.WinForms.Properties.Resources.icons8_grayPerson_100;
+            this.pbPersonImage.Location = new System.Drawing.Point(93, 61);
+            this.pbPersonImage.Name = "pbPersonImage";
+            this.pbPersonImage.Size = new System.Drawing.Size(178, 178);
+            this.pbPersonImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbPersonImage.TabIndex = 41;
+            this.pbPersonImage.TabStop = false;
+            // 
+            // circlePictureBox2
+            // 
+            this.circlePictureBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.circlePictureBox2.CircleBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(75)))), ((int)(((byte)(82)))));
+            this.circlePictureBox2.Image = global::SmartBank.WinForms.Properties.Resources.icons8_person_100;
+            this.circlePictureBox2.Location = new System.Drawing.Point(9, 5);
+            this.circlePictureBox2.Name = "circlePictureBox2";
+            this.circlePictureBox2.Size = new System.Drawing.Size(85, 85);
+            this.circlePictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.circlePictureBox2.TabIndex = 37;
+            this.circlePictureBox2.TabStop = false;
+            // 
             // frmAddEditPerson
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -962,15 +991,13 @@
             this.MinimizeBox = false;
             this.Name = "frmAddEditPerson";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Add/Edit Person";
+            this.Text = "Add Person";
             this.Load += new System.EventHandler(this.frmAddEditPerson_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.circlePictureBox2)).EndInit();
             this.pnlProfilePhoto.ResumeLayout(false);
             this.pnlProfilePhoto.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbPersonImage)).EndInit();
             this.pnlPersonInfo.ResumeLayout(false);
             this.pnlPersonInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -980,6 +1007,9 @@
             this.pnlRecordInfo.ResumeLayout(false);
             this.pnlRecordInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPersonImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.circlePictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1052,6 +1082,8 @@
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private Controls.SmartTextBox stbCallingCode;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }
 

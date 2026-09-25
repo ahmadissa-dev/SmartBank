@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="CountryRepository.cs" />
     <Compile Include="DataAccessSettings.cs" />
+    <Compile Include="PersonPhoneRepository.cs" />
     <Compile Include="PersonRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
