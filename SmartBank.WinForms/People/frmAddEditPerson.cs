@@ -106,73 +106,56 @@ namespace SmartBank.WinForms
 
             string fileName = openFileDialog1.FileName;
 
-            if (!IsImageValid(fileName))
-                return;
+            ImageValidationError validationError = ImageValidator.Validate(fileName);
 
-            _selectedProfilePhotoPath = fileName;
-            pbPersonImage.Load(_selectedProfilePhotoPath);
+            if (validationError != ImageValidationError.None)
+            {
+                ShowImageValidationError(validationError);
+                return;
+            }
+
+            pbPersonImage.Load(fileName);
         }
 
-        private bool IsImageValid(string imagePath)
+        private void ShowImageValidationError(ImageValidationError imageValidationError)
         {
+            string message;
 
-            if (!File.Exists(imagePath))
+            switch (imageValidationError)
             {
-                MessageBox.Show(
-                    "The selected image file does not exist.",
-                    "Invalid Image",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return false;
-            }
+                case ImageValidationError.None:
+                    return;
 
-            FileInfo fileInfo = new FileInfo(imagePath);
+                case ImageValidationError.FileNotFound:
+                    message = "The selected image file does not exist.";
+                    break;
 
-            if (!AllowedProfilePhotoExtensions.Contains(fileInfo.Extension, StringComparer.OrdinalIgnoreCase))
-            {
-                MessageBox.Show(
-                    "Only PNG, JPG, and JPEG images are allowed.",
-                    "Invalid Image",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return false;
-            }
+                case ImageValidationError.InvalidExtension:
+                    message = "Only PNG, JPG, and JPEG images are allowed.";
+                    break;
 
-            if (fileInfo.Length > MaxProfilePhotoSizeInBytes)
-            {
-                MessageBox.Show(
-                    "Image size must not exceed 5 MB.",
-                    "Invalid Image",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return false;
-            }
+                case ImageValidationError.FileTooLarge:
+                    message = "Image size must not exceed 5 MB.";
+                    break;
 
-            try
-            {
-                using (Image image = Image.FromFile(imagePath))
-                {
-                    if (image.Height < MinProfilePhotoHeight || image.Width < MinProfilePhotoWidth)
-                    {
-                        MessageBox.Show(
-                            "Image dimensions must be at least 200 x 200 pixels.",
-                            "Invalid Image",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
-                        );
-                        return false;
-                    }
-                }
+                case ImageValidationError.DimensionsTooSmall:
+                    message = "Image dimensions must be at least 200 x 200 pixels.";
+                    break;
+
+                case ImageValidationError.InvalidImage:
+                    message = "The selected file is not a valid image.";
+                    break;
+
+                default:
+                    message = "An unexpected error occurred while validating the image.";
+                    break;
             }
             catch (Exception ex)
             {
                 EventViewerLogger.LogWarning(ex, "Invalid image file selected in frmAddEditPerson");
 
                 MessageBox.Show(
-                    "The selected file is not a valid image.",
+                message,
                     "Invalid Image",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
