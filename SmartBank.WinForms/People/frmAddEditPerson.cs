@@ -3,9 +3,6 @@ using SmartBank.Infrastructure.Logging;
 using SmartBank.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,14 +12,8 @@ namespace SmartBank.WinForms
     {
         private readonly CountryService _countryService = new CountryService();
         private readonly PersonPhoneService _personPhoneService = new PersonPhoneService();
-        private string _selectedProfilePhotoPath = string.Empty;
-        private Country _selectedCountry;
+        private List<Country> _countries;
         private int _phoneValidationVersion;
-
-        private const int MaxProfilePhotoSizeInBytes = 1024 * 1024 * 5; // 5MB
-        private const int MinProfilePhotoWidth = 200;
-        private const int MinProfilePhotoHeight = 200;
-        private static readonly string[] AllowedProfilePhotoExtensions = { ".png", ".jpg", ".jpeg" };
 
         public frmAddEditPerson()
         {
@@ -37,7 +28,14 @@ namespace SmartBank.WinForms
 
             bool areCountriesLoaded = await TryLoadCountriesAsync();
 
-            SetCountrySelectionAvailability(areCountriesLoaded);
+            SetComboBoxAvailability(cbCountries, areCountriesLoaded);
+            SetComboBoxAvailability(cbCallingCode, areCountriesLoaded);
+
+            if (!areCountriesLoaded)
+                return;
+
+            BindCountries(cbCountries, nameof(Country.CountryName));
+            BindCountries(cbCallingCode, nameof(Country.CallingCode));
         }
 
         private void ConfigureDateOfBirthPicker()
@@ -52,12 +50,7 @@ namespace SmartBank.WinForms
         {
             try
             {
-                List<Country> countries = await _countryService.GetActiveCountriesAsync();
-
-                cbCountries.DataSource = countries;
-                cbCountries.DisplayMember = nameof(Country.CountryName);
-                cbCountries.ValueMember = nameof(Country.CountryID);
-                cbCountries.SelectedIndex = -1;
+                _countries = await _countryService.GetActiveCountriesAsync();
 
                 return true;
             }
@@ -87,13 +80,21 @@ namespace SmartBank.WinForms
             return false;
         }
 
-        private void SetCountrySelectionAvailability(bool isAvailable)
+        private void BindCountries(ComboBox comboBox, string displayMember)
         {
-            cbCountries.Enabled = isAvailable;
+            comboBox.DataSource = new List<Country>(_countries);
+            comboBox.DisplayMember = displayMember;
+            comboBox.ValueMember = nameof(Country.CountryID);
+            comboBox.SelectedIndex = -1;
+        }
+
+        private void SetComboBoxAvailability(ComboBox comboBox, bool isAvailable)
+        {
+            comboBox.Enabled = isAvailable;
 
             if (!isAvailable)
             {
-                cbCountries.DataSource = null;
+                comboBox.DataSource = null;
             }
         }
 
@@ -150,36 +151,24 @@ namespace SmartBank.WinForms
                     message = "An unexpected error occurred while validating the image.";
                     break;
             }
-            catch (Exception ex)
-            {
-                EventViewerLogger.LogWarning(ex, "Invalid image file selected in frmAddEditPerson");
 
-                MessageBox.Show(
+            MessageBox.Show(
                 message,
-                    "Invalid Image",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return false;
-            }
-
-            return true;
+                "Invalid Image",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            );
         }
 
-        private void cbCountries_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbCountries_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            _selectedCountry = cbCountries.SelectedItem as Country;
-
-            if (_selectedCountry == null)
+            if (cbCallingCode.SelectedIndex == -1)
             {
-                stbCallingCode.Clear();
-                return;
+                cbCallingCode.SelectedValue = cbCountries.SelectedValue;
             }
-
-            stbCallingCode.Text = $"+{_selectedCountry.CallingCode}";
         }
 
-        private async void cbCountries_SelectionChangeCommitted(object sender, EventArgs e)
+        private async void cbCallingCode_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(stbPhoneNumber.Text))
                 return;
@@ -189,13 +178,17 @@ namespace SmartBank.WinForms
 
         private void stbPhoneNumber_Enter(object sender, EventArgs e)
         {
-            if (_selectedCountry == null)
+            if (cbCallingCode.SelectedIndex == -1)
             {
-                MessageBox.Show("Please select a country before entering a phone number",
-                                "Country Required", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show(
+                    "Please select a country code before entering a phone number.",
+                    "Country Code Required",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
 
                 stbPhoneNumber.Clear();
-                cbCountries.Focus();
+                cbCallingCode.Focus();
             }
         }
 
@@ -219,11 +212,11 @@ namespace SmartBank.WinForms
                 return false;
             }
 
-            if (!(cbCountries.SelectedValue is int))
+            if (cbCallingCode.SelectedIndex == -1)
             {
                 errorProvider1.SetError(
                     stbPhoneNumber,
-                    "Please select a country."
+                    "Please select a country code."
                     );
                 return false;
             }
@@ -237,12 +230,12 @@ namespace SmartBank.WinForms
                 return false;
             }
 
-            int countryID = (int)cbCountries.SelectedValue;
+            int phoneCountryID = (int)cbCallingCode.SelectedValue;
 
             try
             {
                 bool exists = await _personPhoneService
-                                .PhoneNumberExistsAsync(phoneNumber, countryID);
+                                .PhoneNumberExistsAsync(phoneNumber, phoneCountryID);
 
                 if (version != _phoneValidationVersion
                     || stbPhoneNumber.Text.Trim() != phoneNumber)
