@@ -170,10 +170,7 @@ namespace SmartBank.WinForms
 
         private async void cbCallingCode_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(stbPhoneNumber.Text))
-                return;
-
-            await CanUsePhoneNumberAsync();
+            await ValidatePhoneNumberInputAsync();
         }
 
         private void stbPhoneNumber_Enter(object sender, EventArgs e)
@@ -194,87 +191,68 @@ namespace SmartBank.WinForms
 
         private async void stbPhoneNumber_Leave(object sender, EventArgs e)
         {
-            await CanUsePhoneNumberAsync();
+            await ValidatePhoneNumberInputAsync();
         }
 
-        private async Task<bool> CanUsePhoneNumberAsync()
+        private async Task ValidatePhoneNumberInputAsync()
         {
             int version = ++_phoneValidationVersion;
 
             string phoneNumber = stbPhoneNumber.Text.Trim();
 
-            if (string.IsNullOrEmpty(phoneNumber))
+            int? phoneCountryID = (int?)cbCallingCode.SelectedValue;
+
+            PersonPhoneValidationError phoneValidationError = await _personPhoneService.
+                                                                    ValidatePhoneNumberAsync(phoneNumber, phoneCountryID);
+
+            if ((version != _phoneValidationVersion)
+               || (phoneNumber != stbPhoneNumber.Text.Trim()) 
+               || (phoneCountryID != (int?)cbCallingCode.SelectedValue))
             {
-                errorProvider1.SetError(
-                    stbPhoneNumber,
-                    "Phone number is required."
-                    );
-                return false;
+                return;
             }
 
-            if (cbCallingCode.SelectedIndex == -1)
+            ShowPhoneNumberValidationError(phoneValidationError);
+        }
+
+        private void ShowPhoneNumberValidationError(PersonPhoneValidationError phoneValidationError)
+        {
+            string message = string.Empty;
+
+            switch (phoneValidationError)
             {
-                errorProvider1.SetError(
-                    stbPhoneNumber,
-                    "Please select a country code."
-                    );
-                return false;
-            }
+                case PersonPhoneValidationError.None:
+                    break;
 
-            if (!_personPhoneService.IsPhoneNumberValid(phoneNumber))
-            {
-                errorProvider1.SetError(
-                    stbPhoneNumber,
-                    "Phone number is not valid."
-                    );
-                return false;
-            }
+                case PersonPhoneValidationError.Required:
+                    message = "Phone number is required.";
+                    break;
 
-            int phoneCountryID = (int)cbCallingCode.SelectedValue;
+                case PersonPhoneValidationError.PhoneCountryRequired:
+                    message = "Please select a country code.";
+                    break;
 
-            try
-            {
-                bool exists = await _personPhoneService
-                                .PhoneNumberExistsAsync(phoneNumber, phoneCountryID);
+                case PersonPhoneValidationError.InvalidFormat:
+                    message = "Enter a valid phone number containing 5 to 15 digits.";
+                    break;
 
-                if (version != _phoneValidationVersion
-                    || stbPhoneNumber.Text.Trim() != phoneNumber)
-                    return false;
+                case PersonPhoneValidationError.AlreadyExists:
+                    message = "This phone number is already registered.";
+                    break;
 
-                if (exists)
-                {
-                    errorProvider1.SetError(
-                        stbPhoneNumber,
-                        "This number is already taken; please choose another number."
-                    );
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                EventViewerLogger.LogError(
-                ex,
-                "Failed to check phone number uniqueness during phone number validation."
-                );
+                case PersonPhoneValidationError.ValidationFailed:
+                    message = "Unable to verify the phone number right now. Please try again.";
+                    break;
 
-                if (version != _phoneValidationVersion
-                    || stbPhoneNumber.Text.Trim() != phoneNumber)
-                    return false;
-
-                errorProvider1.SetError(
-                    stbPhoneNumber,
-                    "Unable to check the phone number right now. Please try again."
-                );
-
-                return false;
+                default:
+                    message = "An unexpected error occurred while validating the phone number.";
+                    break;
             }
 
             errorProvider1.SetError(
                 stbPhoneNumber,
-                string.Empty
+                message
             );
-
-            return true;
         }
     }
 }
