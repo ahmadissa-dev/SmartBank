@@ -3,9 +3,6 @@ using SmartBank.Infrastructure.Logging;
 using SmartBank.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,14 +12,8 @@ namespace SmartBank.WinForms
     {
         private readonly CountryService _countryService = new CountryService();
         private readonly PersonPhoneService _personPhoneService = new PersonPhoneService();
-        private string _selectedProfilePhotoPath = string.Empty;
-        private Country _selectedCountry;
+        private List<Country> _countries;
         private int _phoneValidationVersion;
-
-        private const int MaxProfilePhotoSizeInBytes = 1024 * 1024 * 5; // 5MB
-        private const int MinProfilePhotoWidth = 200;
-        private const int MinProfilePhotoHeight = 200;
-        private static readonly string[] AllowedProfilePhotoExtensions = { ".png", ".jpg", ".jpeg" };
 
         public frmAddEditPerson()
         {
@@ -37,7 +28,14 @@ namespace SmartBank.WinForms
 
             bool areCountriesLoaded = await TryLoadCountriesAsync();
 
-            SetCountrySelectionAvailability(areCountriesLoaded);
+            SetComboBoxAvailability(cbCountries, areCountriesLoaded);
+            SetComboBoxAvailability(cbCallingCode, areCountriesLoaded);
+
+            if (!areCountriesLoaded)
+                return;
+
+            BindCountries(cbCountries, nameof(Country.CountryName));
+            BindCountries(cbCallingCode, nameof(Country.CallingCode));
         }
 
         private void ConfigureDateOfBirthPicker()
@@ -52,12 +50,7 @@ namespace SmartBank.WinForms
         {
             try
             {
-                List<Country> countries = await _countryService.GetActiveCountriesAsync();
-
-                cbCountries.DataSource = countries;
-                cbCountries.DisplayMember = nameof(Country.CountryName);
-                cbCountries.ValueMember = nameof(Country.CountryID);
-                cbCountries.SelectedIndex = -1;
+                _countries = await _countryService.GetActiveCountriesAsync();
 
                 return true;
             }
@@ -87,13 +80,21 @@ namespace SmartBank.WinForms
             return false;
         }
 
-        private void SetCountrySelectionAvailability(bool isAvailable)
+        private void BindCountries(ComboBox comboBox, string displayMember)
         {
-            cbCountries.Enabled = isAvailable;
+            comboBox.DataSource = new List<Country>(_countries);
+            comboBox.DisplayMember = displayMember;
+            comboBox.ValueMember = nameof(Country.CountryID);
+            comboBox.SelectedIndex = -1;
+        }
+
+        private void SetComboBoxAvailability(ComboBox comboBox, bool isAvailable)
+        {
+            comboBox.Enabled = isAvailable;
 
             if (!isAvailable)
             {
-                cbCountries.DataSource = null;
+                comboBox.DataSource = null;
             }
         }
 
@@ -106,199 +107,152 @@ namespace SmartBank.WinForms
 
             string fileName = openFileDialog1.FileName;
 
-            if (!IsImageValid(fileName))
-                return;
+            ImageValidationError validationError = ImageValidator.Validate(fileName);
 
-            _selectedProfilePhotoPath = fileName;
-            pbPersonImage.Load(_selectedProfilePhotoPath);
-        }
-
-        private bool IsImageValid(string imagePath)
-        {
-
-            if (!File.Exists(imagePath))
+            if (validationError != ImageValidationError.None)
             {
-                MessageBox.Show(
-                    "The selected image file does not exist.",
-                    "Invalid Image",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return false;
-            }
-
-            FileInfo fileInfo = new FileInfo(imagePath);
-
-            if (!AllowedProfilePhotoExtensions.Contains(fileInfo.Extension, StringComparer.OrdinalIgnoreCase))
-            {
-                MessageBox.Show(
-                    "Only PNG, JPG, and JPEG images are allowed.",
-                    "Invalid Image",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return false;
-            }
-
-            if (fileInfo.Length > MaxProfilePhotoSizeInBytes)
-            {
-                MessageBox.Show(
-                    "Image size must not exceed 5 MB.",
-                    "Invalid Image",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return false;
-            }
-
-            try
-            {
-                using (Image image = Image.FromFile(imagePath))
-                {
-                    if (image.Height < MinProfilePhotoHeight || image.Width < MinProfilePhotoWidth)
-                    {
-                        MessageBox.Show(
-                            "Image dimensions must be at least 200 x 200 pixels.",
-                            "Invalid Image",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
-                        );
-                        return false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                EventViewerLogger.LogWarning(ex, "Invalid image file selected in frmAddEditPerson");
-
-                MessageBox.Show(
-                    "The selected file is not a valid image.",
-                    "Invalid Image",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return false;
-            }
-
-            return true;
-        }
-
-        private void cbCountries_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _selectedCountry = cbCountries.SelectedItem as Country;
-
-            if (_selectedCountry == null)
-            {
-                stbCallingCode.Clear();
+                ShowImageValidationError(validationError);
                 return;
             }
 
-            stbCallingCode.Text = $"+{_selectedCountry.CallingCode}";
+            pbPersonImage.Load(fileName);
         }
 
-        private async void cbCountries_SelectionChangeCommitted(object sender, EventArgs e)
+        private void ShowImageValidationError(ImageValidationError imageValidationError)
         {
-            if (string.IsNullOrWhiteSpace(stbPhoneNumber.Text))
-                return;
+            string message;
 
-            await CanUsePhoneNumberAsync();
+            switch (imageValidationError)
+            {
+                case ImageValidationError.None:
+                    return;
+
+                case ImageValidationError.FileNotFound:
+                    message = "The selected image file does not exist.";
+                    break;
+
+                case ImageValidationError.InvalidExtension:
+                    message = "Only PNG, JPG, and JPEG images are allowed.";
+                    break;
+
+                case ImageValidationError.FileTooLarge:
+                    message = "Image size must not exceed 5 MB.";
+                    break;
+
+                case ImageValidationError.DimensionsTooSmall:
+                    message = "Image dimensions must be at least 200 x 200 pixels.";
+                    break;
+
+                case ImageValidationError.InvalidImage:
+                    message = "The selected file is not a valid image.";
+                    break;
+
+                default:
+                    message = "An unexpected error occurred while validating the image.";
+                    break;
+            }
+
+            MessageBox.Show(
+                message,
+                "Invalid Image",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            );
+        }
+
+        private void cbCountries_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (cbCallingCode.SelectedIndex == -1)
+            {
+                cbCallingCode.SelectedValue = cbCountries.SelectedValue;
+            }
+        }
+
+        private async void cbCallingCode_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            await ValidatePhoneNumberInputAsync();
         }
 
         private void stbPhoneNumber_Enter(object sender, EventArgs e)
         {
-            if (_selectedCountry == null)
+            if (cbCallingCode.SelectedIndex == -1)
             {
-                MessageBox.Show("Please select a country before entering a phone number",
-                                "Country Required", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show(
+                    "Please select a country code before entering a phone number.",
+                    "Country Code Required",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
 
                 stbPhoneNumber.Clear();
-                cbCountries.Focus();
+                cbCallingCode.Focus();
             }
         }
 
         private async void stbPhoneNumber_Leave(object sender, EventArgs e)
         {
-            await CanUsePhoneNumberAsync();
+            await ValidatePhoneNumberInputAsync();
         }
 
-        private async Task<bool> CanUsePhoneNumberAsync()
+        private async Task ValidatePhoneNumberInputAsync()
         {
             int version = ++_phoneValidationVersion;
 
             string phoneNumber = stbPhoneNumber.Text.Trim();
 
-            if (string.IsNullOrEmpty(phoneNumber))
+            int? phoneCountryID = (int?)cbCallingCode.SelectedValue;
+
+            PersonPhoneValidationError phoneValidationError = await _personPhoneService.
+                                                                    ValidatePhoneNumberAsync(phoneNumber, phoneCountryID);
+
+            if ((version != _phoneValidationVersion)
+               || (phoneNumber != stbPhoneNumber.Text.Trim()) 
+               || (phoneCountryID != (int?)cbCallingCode.SelectedValue))
             {
-                errorProvider1.SetError(
-                    stbPhoneNumber,
-                    "Phone number is required."
-                    );
-                return false;
+                return;
             }
 
-            if (!(cbCountries.SelectedValue is int))
+            ShowPhoneNumberValidationError(phoneValidationError);
+        }
+
+        private void ShowPhoneNumberValidationError(PersonPhoneValidationError phoneValidationError)
+        {
+            string message = string.Empty;
+
+            switch (phoneValidationError)
             {
-                errorProvider1.SetError(
-                    stbPhoneNumber,
-                    "Please select a country."
-                    );
-                return false;
-            }
+                case PersonPhoneValidationError.None:
+                    break;
 
-            if (!_personPhoneService.IsPhoneNumberValid(phoneNumber))
-            {
-                errorProvider1.SetError(
-                    stbPhoneNumber,
-                    "Phone number is not valid."
-                    );
-                return false;
-            }
+                case PersonPhoneValidationError.Required:
+                    message = "Phone number is required.";
+                    break;
 
-            int countryID = (int)cbCountries.SelectedValue;
+                case PersonPhoneValidationError.PhoneCountryRequired:
+                    message = "Please select a country code.";
+                    break;
 
-            try
-            {
-                bool exists = await _personPhoneService
-                                .PhoneNumberExistsAsync(phoneNumber, countryID);
+                case PersonPhoneValidationError.InvalidFormat:
+                    message = "Enter a valid phone number containing 5 to 15 digits.";
+                    break;
 
-                if (version != _phoneValidationVersion
-                    || stbPhoneNumber.Text.Trim() != phoneNumber)
-                    return false;
+                case PersonPhoneValidationError.AlreadyExists:
+                    message = "This phone number is already registered.";
+                    break;
 
-                if (exists)
-                {
-                    errorProvider1.SetError(
-                        stbPhoneNumber,
-                        "This number is already taken; please choose another number."
-                    );
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                EventViewerLogger.LogError(
-                ex,
-                "Failed to check phone number uniqueness during phone number validation."
-                );
+                case PersonPhoneValidationError.ValidationFailed:
+                    message = "Unable to verify the phone number right now. Please try again.";
+                    break;
 
-                if (version != _phoneValidationVersion
-                    || stbPhoneNumber.Text.Trim() != phoneNumber)
-                    return false;
-
-                errorProvider1.SetError(
-                    stbPhoneNumber,
-                    "Unable to check the phone number right now. Please try again."
-                );
-
-                return false;
+                default:
+                    message = "An unexpected error occurred while validating the phone number.";
+                    break;
             }
 
             errorProvider1.SetError(
                 stbPhoneNumber,
-                string.Empty
+                message
             );
-
-            return true;
         }
     }
 }

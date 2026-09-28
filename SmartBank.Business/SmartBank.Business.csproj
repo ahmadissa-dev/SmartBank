@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CountryService.cs" />
+    <Compile Include="ImageValidator.cs" />
     <Compile Include="PersonPhoneService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -49,6 +51,10 @@
     <ProjectReference Include="..\SmartBank.DataAccess\SmartBank.DataAccess.csproj">
       <Project>{8ee1c153-f302-4e4d-a7b9-2a2a869b06cd}</Project>
       <Name>SmartBank.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartBank.Infrastructure\SmartBank.Infrastructure.csproj">
+      <Project>{23c935a1-0989-4226-a599-63aff4638b84}</Project>
+      <Name>SmartBank.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\SmartBank.Models\SmartBank.Models.csproj">
       <Project>{b5ee0e1d-e4a8-4368-b108-1b01a27a6c5e}</Project>
